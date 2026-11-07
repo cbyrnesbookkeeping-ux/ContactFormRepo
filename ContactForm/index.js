@@ -47,18 +47,18 @@ module.exports = async function (context, req) {
         );
 
         const graphClient = Client.init({
-            authProvider: {
-                getAccessToken: async () => {
-
-                    const token =
-                      await credential.getToken(
+            authProvider: async (done) => {
+                try {
+                    const token = await credential.getToken(
                         "https://graph.microsoft.com/.default"
-                      );
-
-                    return token.token;
+                            );
+                    done(null, token.token);
+                } catch (err) {
+                    done(err, null);
                 }
             }
         });
+
 
         const emailBody = `
 New Website Enquiry
